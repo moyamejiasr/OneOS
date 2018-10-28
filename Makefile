@@ -1,4 +1,4 @@
-OBJECTS = src/loader.o src/kmain.o
+OBJECTS = src/loader.o src/kmain.o src/io.o
 CC = gcc
 CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector \
          -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c
