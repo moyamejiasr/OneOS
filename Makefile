@@ -17,3 +17,8 @@ os.iso: kernel.elf
         
 run: os.iso
 	bochs -f bochsrc.txt -q
+
+clean:
+	for i in `find . -type f \( -name '*.elf' -o -name '*.o' -o -name '*.iso' \)`; do \
+		rm -f $$i; \
+	done
