@@ -19,6 +19,6 @@ run: os.iso
 	bochs -f bochsrc.txt -q
 
 clean:
-	for i in `find . -type f \( -name '*.elf' -o -name '*.o' -o -name '*.iso' \)`; do \
+	for i in `find . -type f \( -name '*.elf' -o -name '*.o' \)`; do \
 		rm -f $$i; \
 	done
