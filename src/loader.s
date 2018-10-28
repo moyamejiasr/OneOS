@@ -25,25 +25,24 @@ KERNEL_STACK_SIZE equ 4096      ; size of stack in bytes
 ; The linker script specifies _start(loader here) as the entry point to the kernel.
 section .text
 global loader
-    ; the loader label (defined as entry point in linker script)
-    loader:
+	; the loader label (defined as entry point in linker script)
+	loader:
+		; Now in kernel mode! Now we must set the stack. Notice that processor is not 
+		; fully initialized yet and stuff like float point instructions are not available.
+		; To set up a stack, we simply set the esp register to point to the top of
+		; our stack (it will grow downwards).
+		mov esp, kernel_stack + KERNEL_STACK_SIZE   ; point esp to the start of the
+																					; stack (end of memory area)
+		; Now we call the C code from asm using GNU/GCC convention.
+		; The assembly code for C convention
+		extern krnl_main            ; the function krnl_main is defined in kmain
+		call krnl_main              ; call the function, the result will be in eax
 
-    ; Now in kernel mode! Now we must set the stack. Notice that processor is not 
-    ; fully initialized yet and stuff like float point instructions are not available.
-	; To set up a stack, we simply set the esp register to point to the top of
-    ; our stack (it will grow downwards).
-        mov esp, kernel_stack + KERNEL_STACK_SIZE   ; point esp to the start of the
-                                                    ; stack (end of memory area)
-    ; Now we call the C code from asm using GNU/GCC convention.
-        ; The assembly code for C convention
-        extern krnl_main            ; the function krnl_main is defined in kmain
-        call krnl_main              ; call the function, the result will be in eax
-
-    ; In case the function returns, we put the computer into a loop.
-    .loop:
-        jmp .loop                   ; loop forever
+		; In case the function returns, we put the computer into a loop.
+		.loop:
+		jmp .loop                   ; loop forever
 
 section .bss:
-    align 4                         ; align at 4 bytes
-    kernel_stack:                   ; label points to beginning of memory
-        resb KERNEL_STACK_SIZE ; reserve stack for the kernel
+	align 4                         ; align at 4 bytes
+	kernel_stack:                   ; label points to beginning of memory
+		resb KERNEL_STACK_SIZE ; reserve stack for the kernel
