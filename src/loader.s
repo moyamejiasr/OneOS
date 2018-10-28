@@ -24,12 +24,12 @@
         call krnl_main       ; call the function, the result will be in eax
 
     .loop:
-        jmp .loop                   ; loop forever
+        jmp .loop                   ; brother may I have some LOOPS
 
 
     KERNEL_STACK_SIZE equ 4096      ; size of stack in bytes
 
-    section .bss:
+    section .bss:                   ; bootstramp stack section
     align 4                         ; align at 4 bytes
     kernel_stack:                   ; label points to beginning of memory
         resb KERNEL_STACK_SIZE      ; reserve stack for the kernel
