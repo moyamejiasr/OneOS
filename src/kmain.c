@@ -12,8 +12,8 @@
 #define FB_POS                  0x000B8000
 
 /* FrameBuffer Size */
-#define FB_ROW                  5
-#define FB_COLUMNS              80
+#define FB_ROW                  50 //25
+#define FB_COLUMNS              160 //80
 
 enum Color {
   Black, Blue, Green, Cyan,
@@ -23,8 +23,6 @@ enum Color {
 };
 
 unsigned short fb_r = 0, fb_c = 0;
-
-char *fb = (char *)FB_POS;
 
 // Moves the cursor of the framebuffer to the given position
 void
@@ -44,22 +42,27 @@ fb_move_cursor(unsigned short pos)
 void
 fb_print_chars(char* c, unsigned char fg, unsigned char bg)
 {
+  char *fb = (char *)FB_POS;
   unsigned int i = 0;
   while ( c[i] != 0 ) {
-    if (fb_c >= FB_COLUMNS || c[i] == '\n') {
+    char isJump = c[i] == '\n';
+    if (fb_c >= FB_COLUMNS || isJump) {
         fb_c = 0;
         fb_r++;
-        //continue;
+        if (isJump) {
+          i++;
+          continue;
+        }
     }
     fb[fb_c++ + (fb_r * FB_COLUMNS)] = c[i++];
     fb[fb_c++ + (fb_r * FB_COLUMNS)] = fg | bg << 4;
-    fb_move_cursor(fb_c + (fb_r * FB_COLUMNS) + 1);
+    fb_move_cursor(fb_c + (fb_r * (FB_COLUMNS/2)) + 1);
   }
 }
 
 void
 krnl_main()
 {
-  fb_print_chars("OneOS init.\nTesting line jump~~\0", White, Black);
+  fb_print_chars("OneOS init.\nTesting line jump~~\nsecond.\0", White, Black);
   //fb_move_cursor(80);
 }
