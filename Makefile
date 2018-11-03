@@ -14,11 +14,11 @@ kernel.elf: $(OBJECTS)
 os.iso: kernel.elf
 	cp src/kernel.elf iso/boot/kernel.elf
 	grub-mkrescue -o os.iso iso
-        
-run: os.iso
-	bochs -f bochsrc.txt -q
 
 clean:
 	for i in `find . -type f \( -name '*.elf' -o -name '*.o' \)`; do \
 		rm -f $$i; \
 	done
+        
+run: os.iso
+	bochs -f bochsrc.txt -q
