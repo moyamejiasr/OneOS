@@ -45,24 +45,28 @@ fb_print_chars(char* c, unsigned char fg, unsigned char bg)
   char *fb = (char *)FB_POS;
   unsigned int i = 0;
   while ( c[i] != 0 ) {
-    char isJump = c[i] == '\n';
-    if (fb_c >= FB_COLUMNS || isJump) {
-        fb_c = 0;
-        fb_r++;
-        if (isJump) {
-          i++;
-          continue;
-        }
+    char pChar = c[i];
+    if (fb_c >= FB_COLUMNS) { //horizontal limit exceeded, jump line
+      fb_c = 0; fb_r++;
     }
-    fb[fb_c++ + (fb_r * FB_COLUMNS)] = c[i++];
-    fb[fb_c++ + (fb_r * FB_COLUMNS)] = fg | bg << 4;
-    fb_move_cursor(fb_c + (fb_r * (FB_COLUMNS/2)) + 1);
+    if (pChar == '\n') { //jump-line found
+      fb_c = 0; fb_r++;
+      i++;
+      continue;
+    }
+    
+    unsigned short row = fb_r * FB_COLUMNS;
+    fb[row + fb_c] = c[i++];
+    fb[row + fb_c + 1] = fg | bg << 4;
+
+    fb_move_cursor(fb_r * (FB_COLUMNS/2) + (fb_c/2) + 1);
+    fb_c += 2;
   }
 }
 
 void
 krnl_main()
 {
-  fb_print_chars("OneOS init.\nTesting line jump~~\nsecond.\0", White, Black);
+  fb_print_chars("OneOS init.\nTesting line jump~~\n\nsecond.\0", White, Black);
   //fb_move_cursor(80);
 }
