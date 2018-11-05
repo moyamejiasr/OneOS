@@ -67,6 +67,6 @@ fb_print_chars(char* c, unsigned char fg, unsigned char bg)
 void
 krnl_main()
 {
-  fb_print_chars("OneOS init.\nTesting line jump~~\n\nsecond.\0", White, Black);
+  fb_print_chars("OneOS init.\n @user>\n\nsecond.\0", White, Black);
   //fb_move_cursor(80);
 }
